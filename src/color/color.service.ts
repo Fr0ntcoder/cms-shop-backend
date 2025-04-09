@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { ColorDto } from 'src/color/dto/color.dto'
 import { PrismaService } from 'src/prisma.service'
+import { ColorDto } from './dto/color.dto'
 
 @Injectable()
 export class ColorService {

@@ -11,8 +11,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common'
 import { Auth } from 'src/auth/decorator/auth.decorator'
-import { ColorDto } from 'src/color/dto/color.dto'
 import { ColorService } from './color.service'
+import { ColorDto } from './dto/color.dto'
 
 @Controller('colors')
 export class ColorController {
