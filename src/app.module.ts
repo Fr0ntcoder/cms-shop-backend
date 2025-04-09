@@ -9,6 +9,7 @@ import { ProductModule } from './product/product.module'
 import { StatisticsModule } from './statistics/statistics.module'
 import { StoreModule } from './store/store.module'
 import { UserModule } from './user/user.module'
+import { ReviewModule } from './review/review.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -21,6 +22,7 @@ import { UserModule } from './user/user.module'
     OrderModule,
     StatisticsModule,
     ProductModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}
