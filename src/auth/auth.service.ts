@@ -61,18 +61,18 @@ export class AuthService {
       expiresIn: '1h',
     })
 
-    const refereshToken = this.jwt.sign(data, {
+    const refreshToken = this.jwt.sign(data, {
       expiresIn: '7d',
     })
 
-    return { accessToken, refereshToken }
+    return { accessToken, refreshToken }
   }
 
   private async validateUser(dto: AuthDto) {
     const user = await this.userService.getByEmail(dto.email)
 
     if (!user) {
-      throw new NotFoundException('Пользователь не найде')
+      throw new NotFoundException('Пользователь не найден')
     }
 
     return user

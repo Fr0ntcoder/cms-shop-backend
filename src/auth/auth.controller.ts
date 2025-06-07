@@ -24,9 +24,9 @@ export class AuthController {
   @HttpCode(200)
   @Post('login')
   async login(@Body() dto: AuthDto, @Res({ passthrough: true }) res: Response) {
-    const { refereshToken, ...response } = await this.authService.login(dto)
+    const { refreshToken, ...response } = await this.authService.login(dto)
 
-    this.authService.addRefreshTokenToResponse(res, refereshToken)
+    this.authService.addRefreshTokenToResponse(res, refreshToken)
 
     return response
   }
@@ -38,9 +38,9 @@ export class AuthController {
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { refereshToken, ...response } = await this.authService.register(dto)
+    const { refreshToken, ...response } = await this.authService.register(dto)
 
-    this.authService.addRefreshTokenToResponse(res, refereshToken)
+    this.authService.addRefreshTokenToResponse(res, refreshToken)
 
     return response
   }
@@ -59,11 +59,11 @@ export class AuthController {
       this.authService.removeRefreshTokenFromResponse(res)
       throw new UnauthorizedException('Refresh token is missing')
     }
-    const { refereshToken, ...response } = await this.authService.getNewTokens(
+    const { refreshToken, ...response } = await this.authService.getNewTokens(
       refreshTokenFromCookies,
     )
 
-    this.authService.addRefreshTokenToResponse(res, refereshToken)
+    this.authService.addRefreshTokenToResponse(res, refreshToken)
 
     return response
   }
@@ -83,36 +83,36 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthCallback(
-    @Req() req: any,
+    @Req() req,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { refereshToken, ...response } =
+    const { refreshToken, ...response } =
       await this.authService.validateOAuthLogin(req)
 
-    this.authService.addRefreshTokenToResponse(res, refereshToken)
+    this.authService.addRefreshTokenToResponse(res, refreshToken)
 
     return res.redirect(
-      `${process.env.CLIENT_URL}/dashboard?accessToken=${response.accessToken}`,
+      `${process.env['CLIENT_URL']}/dashboard?accessToken=${response.accessToken}`,
     )
   }
 
   @Get('yandex')
   @UseGuards(AuthGuard('yandex'))
-  async yandexAuth(@Req() _req) {}
+  async yandexAuth(@Req() req) {}
 
   @Get('yandex/callback')
   @UseGuards(AuthGuard('yandex'))
   async yandexAuthCallback(
-    @Req() req: any,
+    @Req() req,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { refereshToken, ...response } =
+    const { refreshToken, ...response } =
       await this.authService.validateOAuthLogin(req)
 
-    this.authService.addRefreshTokenToResponse(res, refereshToken)
+    this.authService.addRefreshTokenToResponse(res, refreshToken)
 
     return res.redirect(
-      `${process.env.CLIENT_URL}/dashboard?accessToken=${response.accessToken}`,
+      `${process.env['CLIENT_URL']}/dashboard?accessToken=${response.accessToken}`,
     )
   }
 }

@@ -1,16 +1,16 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from './app.module'
 
-import * as cookieParser from 'cookie-parser';
+import * as cookieParser from 'cookie-parser'
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.use(cookieParser());
+  const app = await NestFactory.create(AppModule)
+  app.use(cookieParser())
   app.enableCors({
-    origin: [process.env.CLIENT_URL],
+    origin: ['http://localhost:3000'],
     credentials: true,
     exposedHeaders: 'set-cookie',
-  });
-  await app.listen(5000);
+  })
+  await app.listen(5000)
 }
 
-bootstrap();
+bootstrap()

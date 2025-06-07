@@ -16,7 +16,7 @@ model User {
   password String?
 
   name    String @default("Не указано")
-  picture String @default("/upload/no-user-image.png")
+  picture String @default("/uploads/no-user-image.png")
 
   stores Store[]
 
