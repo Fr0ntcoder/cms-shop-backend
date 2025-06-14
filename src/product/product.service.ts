@@ -15,6 +15,8 @@ export class ProductService {
               contains: searchTerm,
               mode: 'insensitive',
             },
+          },
+          {
             description: {
               contains: searchTerm,
               mode: 'insensitive',
@@ -22,21 +24,21 @@ export class ProductService {
           },
         ],
       },
+      include: {
+        category: true,
+      },
     })
   }
-  async getAll(searchTerm?: string) {
-    if (searchTerm) {
-      return await this.getSearchTermFilter(searchTerm)
-    }
 
-    return await this.prisma.product.findMany({
+  async getAll(searchTerm?: string) {
+    if (searchTerm) return this.getSearchTermFilter(searchTerm)
+
+    return this.prisma.product.findMany({
       orderBy: {
         createdAt: 'desc',
       },
       include: {
         category: true,
-        color: true,
-        reviews: true,
       },
     })
   }
@@ -59,7 +61,11 @@ export class ProductService {
       include: {
         category: true,
         color: true,
-        reviews: true,
+        reviews: {
+          include: {
+            user: true,
+          },
+        },
       },
     })
 
@@ -90,6 +96,7 @@ export class ProductService {
   }
 
   async getMostPopular() {
+    // Получаем популярные товары, сгруппированные по productId
     const mostPopularProducts = await this.prisma.orderItem.groupBy({
       by: ['productId'],
       _count: {
@@ -101,18 +108,30 @@ export class ProductService {
         },
       },
     })
-    const productsIds = mostPopularProducts.map((item) => item.productId)
 
-    return await this.prisma.product.findMany({
+    // Извлекаем ID товаров, фильтруем null и пустые значения
+    const productIds = mostPopularProducts
+      .map((item) => item.productId)
+      .filter((id): id is string => id !== null && id !== undefined)
+
+    // Если нет товаров, возвращаем пустой массив
+    if (productIds.length === 0) {
+      return []
+    }
+
+    // Получаем полную информацию о товарах
+    const products = await this.prisma.product.findMany({
       where: {
         id: {
-          in: productsIds,
+          in: productIds,
         },
       },
       include: {
         category: true,
       },
     })
+
+    return products
   }
 
   async getSimilar(id: string) {
